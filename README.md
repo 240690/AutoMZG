@@ -15,8 +15,8 @@ Desenvolvido para profissionais de infraestrutura, DevOps, analistas NOC e entus
 <br/><br/><br/>
 📂 <b>Como Utilizar</b>
 ```bash
-git clone https://github.com/bug-it/automzg.git
-cd automzg
+git clone https://github.com/240690/AutoMZG.git
+cd AutoMZG
 chmod +x automzg.sh
 sudo ./automzg.sh
 ```
