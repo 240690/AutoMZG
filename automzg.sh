@@ -123,13 +123,13 @@ status
 # Solicita senha root do MySQL
 read -sp "$(echo -e "${BRANCO}🔑 Digite uma senha para o usuário ROOT do MySQL:")" MYSQL_ROOT_PASS
 echo
-echo -e "${VERDE}✅ Senha digitada: ${AZUL_CLARO}${MYSQL_ROOT_PASS}"
+echo -e "${VERDE}✅ Senha do ROOT definida.${NC}"
 echo
 
 # Solicita senha do usuário Zabbix
 read -sp "$(echo -e "${BRANCO}🔑 Digite uma senha para o usuário DB Zabbix:")" DB_PASS
 echo
-echo -e "${VERDE}✅ Senha digitada: ${AZUL_CLARO}${DB_PASS}"
+echo -e "${VERDE}✅ Senha do DB Zabbix definida.${NC}"
 echo
 
 
@@ -225,7 +225,7 @@ echo -e "${VERDE}🎉 Instalação Finalizada com Sucesso!"
 echo
 echo -e "${ROXO_CLARO}🔗${LARANJA} Zabbix: ${BRANCO}http://${AZUL_CLARO}${IP}${BRANCO}/zabbix (${LARANJA}login: ${AZUL_CLARO}Admin ${BRANCO}/${AZUL_CLARO} zabbix${BRANCO})"
 echo -e "${ROXO_CLARO}🔗${LARANJA} Grafana: ${BRANCO}http://${AZUL_CLARO}${IP}${BRANCO}:3000 (${LARANJA}login: ${AZUL_CLARO}admin ${BRANCO}/${AZUL_CLARO} admin${BRANCO})"
-echo -e "${ROXO_CLARO}🔗${LARANJA} MySQL: ${BRANCO}mysql -u ${AZUL_CLARO}root${BRANCO} -p (${LARANJA}login: ${AZUL_CLARO}root ${BRANCO}/${AZUL_CLARO} ${MYSQL_ROOT_PASS}${BRANCO})"
+echo -e "${ROXO_CLARO}🔗${LARANJA} MySQL: ${BRANCO}mysql -u ${AZUL_CLARO}root${BRANCO} -p (${LARANJA}login: ${AZUL_CLARO}root ${BRANCO}/${AZUL_CLARO} (senha definida na instalação)${BRANCO})"
 echo
 echo -e "${BRANCO}Script desenvolvido por: ${VERDE_LIMAO}BUG IT${NC}"
 echo -e
