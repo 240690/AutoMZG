@@ -134,10 +134,21 @@ echo
 
 
 
+# ===== ESCAPE DE SENHAS =====
+# Literal SQL entre aspas simples: escapa \ e '
+sql_escape() { local s="${1//\\/\\\\}"; printf '%s' "${s//\'/\\\'}"; }
+# Literal PHP entre aspas simples: escapa \ e '
+php_escape() { sql_escape "$1"; }
+# Substituição do sed com delimitador /: escapa \, & e /
+sed_escape() { printf '%s' "$1" | sed -e 's/[\\&/]/\\&/g'; }
+
+MYSQL_ROOT_PASS_SQL=$(sql_escape "$MYSQL_ROOT_PASS")
+DB_PASS_SQL=$(sql_escape "$DB_PASS")
+
 # ===== CONFIGURA MYSQL =====
 echo -e "${BRANCO}📦 Configurando Banco de Dados MySQL:"
 mysql -u root <<EOF &>/dev/null
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PASS}';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PASS_SQL}';
 FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 EOF
@@ -145,7 +156,7 @@ status
 
 echo -e "${BRANCO}📦 Criando Usuário do Zabbix no MySQL:"
 mysql -u root -p"${MYSQL_ROOT_PASS}" <<EOF &>/dev/null
-CREATE USER IF NOT EXISTS 'zabbix'@'localhost' IDENTIFIED BY '${DB_PASS}';
+CREATE USER IF NOT EXISTS 'zabbix'@'localhost' IDENTIFIED BY '${DB_PASS_SQL}';
 GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
 SET GLOBAL log_bin_trust_function_creators = 1;
 EOF
@@ -174,7 +185,7 @@ mysql -u root -p"${MYSQL_ROOT_PASS}" -e "SET GLOBAL log_bin_trust_function_creat
 
 # ===== CONFIG ZABBIX SERVER =====
 echo -e "${BRANCO}⚙️  Configurando zabbix_server.conf:"
-sed -i "s/# DBPassword=/DBPassword=${DB_PASS}/" /etc/zabbix/zabbix_server.conf &>/dev/null
+sed -i "s/# DBPassword=/DBPassword=$(sed_escape "$DB_PASS")/" /etc/zabbix/zabbix_server.conf &>/dev/null
 status
 
 # ===== LOCALE =====
@@ -191,7 +202,7 @@ cat <<EOF > /etc/zabbix/web/zabbix.conf.php
 \$DB['PORT']     = '0';
 \$DB['DATABASE'] = 'zabbix';
 \$DB['USER']     = 'zabbix';
-\$DB['PASSWORD'] = '${DB_PASS}';
+\$DB['PASSWORD'] = '$(php_escape "$DB_PASS")';
 
 \$ZBX_SERVER      = 'localhost';
 \$ZBX_SERVER_PORT = '10051';
